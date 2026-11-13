@@ -195,6 +195,10 @@ input[type=range]{width:100%;accent-color:var(--primary)}
     <div class="logo"><span class="g">Geo</span><span class="b">biol</span></div>
     <h1 id="hTitle">Claves de entrega</h1>
     <span class="falta" id="syncPill" hidden>Cambios sin copia guardada</span>
+    <span class="gsync" style="margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span id="gStat" style="font-size:13px;color:var(--muted)"></span>
+      <button type="button" class="btn sm" id="btnGSync" title="Sincroniza tus claves entre PC y celular usando tu Google Drive">☁️ Sincronizar con Drive</button>
+    </span>
   </header>
   <div class="bar noprint"></div>
 
@@ -1393,6 +1397,69 @@ function vaultInit(){
   setTab('claves');
 }
 init();
+</script>
+<script>
+/* ===== Sincronización con Google Drive (carpeta oculta de la app: solo esta app la ve) ===== */
+(function(){
+  var CLIENT_ID='1015586213379-vbrg3vr92e5vmum80e9vic84miskuel0.apps.googleusercontent.com';
+  var FILE='geobiol-claves-sync.json', SCOPE='https://www.googleapis.com/auth/drive.appdata';
+  var ON='geobiol_gsync_on', LAST='geobiol_gsync_last';
+  var tok=null, exp=0, tc=null, busy=false, timer=null, fileId=null;
+  function $g(id){return document.getElementById(id)}
+  function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+  function hhmm(t){var d=new Date(Number(t));return d.toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'})}
+  function stat(t){var e=$g('gStat');if(e)e.textContent=t}
+  function idle(){var l=ls(LAST);stat(ls(ON)?(l?'Drive: '+hhmm(l):'Drive conectado'):'')}
+  function configured(){return CLIENT_ID.indexOf('PEGAR_')!==0}
+  function loadGIS(){return new Promise(function(res,rej){
+    if(window.google&&google.accounts&&google.accounts.oauth2)return res();
+    var sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.async=true;
+    sc.onload=function(){res()};sc.onerror=function(){rej(new Error('offline'))};document.head.appendChild(sc);});}
+  function valid(){return tok&&Date.now()<exp-60000}
+  function getToken(){return loadGIS().then(function(){return new Promise(function(res,rej){
+    if(valid())return res(tok);
+    if(!tc)tc=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:function(){}});
+    tc.callback=function(r){if(r.error)return rej(new Error(r.error));tok=r.access_token;exp=Date.now()+(Number(r.expires_in)||3600)*1000;ls(ON,'1');res(tok)};
+    tc.error_callback=function(e){rej(new Error((e&&e.type)||'popup'))};
+    tc.requestAccessToken({prompt:ls(ON)?'':'consent'});
+  })})}
+  function api(path,opt){opt=opt||{};opt.headers=Object.assign({Authorization:'Bearer '+tok},opt.headers||{});
+    return fetch('https://www.googleapis.com/'+path,opt).then(function(r){if(r.status===401){tok=null;throw new Error('401')}if(!r.ok)throw new Error('HTTP '+r.status);return r})}
+  function findFile(){return api('drive/v3/files?spaces=appDataFolder&fields=files(id)&q='+encodeURIComponent("name='"+FILE+"'"))
+    .then(function(r){return r.json()}).then(function(j){return j.files&&j.files[0]?j.files[0].id:null})}
+  var basePersist=window.persist;
+  function sync(){
+    if(!configured()){toast('Falta configurar la conexión con Google (Client ID).');return Promise.resolve()}
+    if(busy)return Promise.resolve();busy=true;stat('Sincronizando…');var res={added:0,updated:0,removed:0};
+    return getToken().then(function(){return fileId||findFile()}).then(function(id){fileId=id;
+      if(!id)return null;return api('drive/v3/files/'+id+'?alt=media').then(function(r){return r.json()});
+    }).then(function(j){
+      if(j&&Array.isArray(j.entradas))res=mergeIn(j.entradas,j.borrados);
+      var body=JSON.stringify({app:'geobiol-claves',version:2,guardado:Date.now(),entradas:state.entries,borrados:state.set.borrados});
+      if(fileId)return api('upload/drive/v3/files/'+fileId+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body:body});
+      var fd=new FormData();fd.append('metadata',new Blob([JSON.stringify({name:FILE,parents:['appDataFolder']})],{type:'application/json'}));
+      fd.append('file',new Blob([body],{type:'application/json'}));
+      return api('upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j2){fileId=j2.id});
+    }).then(function(){
+      state.set.firmaCopia=firma();state.set.copiaTs=Date.now();basePersist();renderAll();
+      ls(LAST,String(Date.now()));idle();
+      if(res.added||res.updated||res.removed)toast(describeMerge(res,'Desde Google Drive'));else toast('☁️ Sincronizado con Google Drive');
+    }).catch(function(e){
+      var m=String(e&&e.message||e);
+      stat(m==='offline'?'Sin internet: se sincroniza luego':(m.indexOf('popup')>=0||m.indexOf('access_denied')>=0)?'Conexión cancelada':'Error al sincronizar');
+      if(m!=='offline'&&m.indexOf('popup')<0)toast('No se pudo sincronizar ('+m+'). Intenta de nuevo.');
+    }).then(function(){busy=false});
+  }
+  window.persist=function(){basePersist();
+    if(!ls(ON))return;
+    if(valid()){clearTimeout(timer);timer=setTimeout(sync,4000);stat('Cambios por sincronizar…')}
+    else stat('Cambios sin subir · toca ☁️');
+  };
+  document.addEventListener('DOMContentLoaded',function(){});
+  function wire(){var b=$g('btnGSync');if(b)b.addEventListener('click',sync);idle();
+    window.addEventListener('online',function(){if(valid())sync()});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+})();
 </script>
 <script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script>
 </body>
