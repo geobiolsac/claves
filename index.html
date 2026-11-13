@@ -1,0 +1,1399 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GEOBIOL · Claves de entrega</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<meta name="theme-color" content="#1b5e20">
+<style>
+/* Layout: generador de clave a la izquierda, formulario a la derecha; lista debajo (en celular todo apilado). */
+:root{
+  --bg:#eef3ee; --surface:#ffffff; --fg:#17261d; --muted:#586b5e; --line:#d2ddd4;
+  --primary:#1f5a3d; --primary-fg:#ffffff; --teal:#1AA89A;
+  --geo:#6b4a2f; --key-bg:#12382a; --key-fg:#d9efe6; --key-digit:#5fe0d2;
+  --pend-bg:#fff0d6; --pend-fg:#7a4a00; --ok-bg:#dcf3e6; --ok-fg:#14573a; --bad-bg:#fde4e1; --bad-fg:#8f2a20;
+  --danger:#b3382c; --field:#f7faf7;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0d1611; --surface:#15221b; --fg:#e3eee6; --muted:#9bb0a2; --line:#27392e;
+    --primary:#1AA89A; --primary-fg:#04201c; --teal:#1AA89A;
+    --geo:#d2a97c; --key-bg:#0a2118; --key-fg:#bcd8cc; --key-digit:#5fe0d2;
+    --pend-bg:#3a2d12; --pend-fg:#f3c77a; --ok-bg:#153a29; --ok-fg:#86e0ae; --bad-bg:#3d1b17; --bad-fg:#f5a89f;
+    --danger:#f08174; --field:#101b15;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 56px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+/* Encabezado */
+.top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.logo{font-weight:800;font-size:22px;letter-spacing:-.01em}
+.logo .g{color:var(--geo)} .logo .b{color:var(--teal)}
+h1{margin:0;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.bar{height:4px;width:56px;background:var(--teal);margin:0 0 18px}
+
+/* Estructura */
+.grid{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:16px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;min-width:0}
+h2{margin:0 0 12px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.stack{display:grid;gap:16px;min-width:0}
+
+/* Clave */
+.keycard{background:var(--key-bg);color:var(--key-fg);border-radius:8px;padding:18px 14px 14px}
+.key{display:flex;gap:10px;justify-content:center}
+.key span{width:54px;height:70px;display:grid;place-items:center;background:rgba(255,255,255,.07);border-bottom:3px solid var(--teal);
+  font:700 40px ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;color:var(--key-digit);font-variant-numeric:tabular-nums}
+.keymeta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:12px;font-size:12.5px}
+.keystate{text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.keyactions{display:flex;gap:8px;margin-top:12px}
+.keyactions .btn{flex:1}
+.avail{margin:12px 0 0;font-size:13px;color:var(--muted)}
+.manual{display:flex;gap:8px;align-items:flex-end;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.manual .f{flex:1}
+.manual input{letter-spacing:.3em;font:600 18px ui-monospace,SFMono-Regular,Consolas,monospace}
+.manualmsg{margin:8px 0 0;font-size:13px;color:var(--muted);min-height:1.2em}
+.manualmsg.warn{color:var(--pend-fg);background:var(--pend-bg);border-radius:6px;padding:6px 10px}
+.manualmsg.bad{color:var(--bad-fg);background:var(--bad-bg);border-radius:6px;padding:6px 10px}
+details.rules{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+details.rules summary{cursor:pointer;font-weight:600;font-size:13.5px}
+.rules label{display:flex;gap:8px;align-items:flex-start;margin-top:9px;font-size:13.5px}
+.rules input{margin-top:3px;accent-color:var(--primary)}
+.rules small{display:block;color:var(--muted)}
+
+/* Botones */
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:10px 14px;font-weight:600;cursor:pointer;min-height:42px}
+.btn:hover{border-color:var(--teal)}
+.btn.primary{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.btn.primary:hover{filter:brightness(1.08)}
+.keycard .btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:var(--key-fg)}
+.keycard .btn.primary{background:var(--teal);border-color:var(--teal);color:#04201c}
+.btn.sm{padding:5px 10px;min-height:32px;font-size:13px}
+.btn.danger{color:var(--danger);border-color:var(--danger)}
+.btn.danger.armed{background:var(--danger);color:#fff}
+
+/* Formulario */
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fields .full{grid-column:1/-1}
+label.f{display:grid;gap:4px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:0}
+.f input,.f select,.f textarea{width:100%;min-width:0;border:1px solid var(--line);background:var(--field);border-radius:6px;padding:9px 10px;font-size:16px;color:var(--fg);font-weight:400}
+.f textarea{resize:vertical;min-height:64px}
+details.more{margin:14px 0 0}
+details.more summary{cursor:pointer;font-weight:600;font-size:13.5px;margin-bottom:12px}
+.formactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.banner{background:var(--pend-bg);color:var(--pend-fg);border-radius:6px;padding:8px 12px;font-size:13.5px;margin-bottom:12px}
+
+/* Lista */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar input[type=search]{flex:1 1 200px;min-width:0;border:1px solid var(--line);background:var(--field);border-radius:6px;padding:9px 10px;font-size:16px}
+.toolbar select{border:1px solid var(--line);background:var(--field);border-radius:6px;padding:9px 10px;font-size:16px}
+.count{color:var(--muted);font-size:13px;margin-left:auto}
+.tscroll{overflow-x:auto}
+.tbl{border-collapse:collapse;width:100%;font-size:14px}
+.tbl th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:6px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+.c-key b{display:block;white-space:nowrap;font:700 17px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.c-key .tag,.c-key .falta{white-space:nowrap;margin-top:3px}
+.tbl .pill,.tbl td[data-label="Fecha"]{white-space:nowrap}
+@media screen and (min-width:761px){.tbl td.c-key{min-width:6rem}}
+.falta{color:var(--pend-fg);background:var(--pend-bg);border-radius:4px;padding:1px 6px;font-size:12px;font-weight:600}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700}
+.pill.Pendiente{background:var(--pend-bg);color:var(--pend-fg)}
+.pill.Entregado{background:var(--field);color:var(--fg);border:1px solid var(--line)}
+.pill.Recogido{background:var(--ok-bg);color:var(--ok-fg)}
+.pill.Observado{background:var(--bad-bg);color:var(--bad-fg)}
+.nota{color:var(--muted);font-size:12.5px;margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ok-fg);background:var(--ok-bg);border-radius:4px;padding:1px 6px;vertical-align:middle}
+.tbl tr.libre td:not(.acts){opacity:.62}
+.acts{min-width:11rem}
+.acts .btn{margin:0 4px 4px 0;white-space:nowrap}
+.empty{padding:26px 8px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--fg);margin-bottom:4px}
+
+/* Exportar */
+.exports{display:flex;flex-wrap:wrap;gap:10px}
+.hint{color:var(--muted);font-size:13px;margin:12px 0 0}
+.hint+.hint{margin-top:6px}
+input[type=file]{display:none}
+
+/* Aviso */
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--key-bg);color:var(--key-fg);
+  padding:10px 16px;border-radius:6px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100vw - 32px);z-index:9}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.printonly{display:none}
+
+/* Pestañas */
+.tabs{display:flex;gap:4px;margin:0 0 16px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;padding:10px 16px;min-height:44px;font-weight:700;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--teal)}
+body.vault-on #syncPill{display:none!important}
+
+/* Bóveda */
+.vnarrow{max-width:520px}
+.pwrow{display:flex;gap:6px}
+.pwrow input{flex:1;min-width:0}
+.eye{flex:none;display:grid;place-items:center;width:42px;min-height:42px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:6px;cursor:pointer}
+.eye:hover{border-color:var(--teal)}
+.eye.sm{width:34px;min-height:34px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;margin:14px 0 4px}
+.chk input{margin-top:3px;accent-color:var(--primary)}
+.vtop{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.vtop .hint{margin:0}
+.gout{background:var(--key-bg);color:var(--key-digit);border-radius:8px;padding:14px;min-height:3.2em;font:600 19px/1.35 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;letter-spacing:.04em;overflow-wrap:anywhere;word-break:break-all;user-select:all}
+.gbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.gopts label.o{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:14px}
+.gopts input{accent-color:var(--primary)}
+input[type=range]{width:100%;accent-color:var(--primary)}
+.vitem{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;gap:8px 18px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.vitem:last-child{border-bottom:0}
+.vsitio{font-size:15.5px}
+.vline{display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-width:0}
+.vuser{overflow-wrap:anywhere}
+.pwtext{font:600 15px ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;word-break:break-all;min-width:0;flex:1 1 8rem}
+.vact{display:flex;gap:6px;flex-wrap:wrap}
+.vdate{grid-column:1/-1;color:var(--muted);font-size:12px}
+@media (max-width:760px){.vitem{grid-template-columns:minmax(0,1fr)}}
+@media print{#tabVault{display:none!important}}
+
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){.fields{grid-template-columns:minmax(0,1fr)}.key span{width:50px;height:64px;font-size:36px}}
+@media screen and (max-width:760px){
+  .tbl thead{display:none}
+  .tbl,.tbl tbody,.tbl tr,.tbl td{display:block;width:100%}
+  .tbl tr{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;padding:8px 12px;background:var(--surface)}
+  .tbl td{display:flex;gap:12px;justify-content:space-between;padding:4px 0;border:0;text-align:right;min-width:0}
+  .tbl td::before{content:attr(data-label);flex:none;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;text-align:left;padding-top:2px}
+  .tbl td:empty{display:none}
+  .tbl td.c-key{justify-content:flex-start;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:4px}
+  .tbl td.c-key::before{display:none}
+  .tbl td.acts{justify-content:flex-start;flex-wrap:wrap;padding-top:8px}
+  .tbl td.acts::before{display:none}
+}
+@media print{
+  body{background:#fff;color:#000}
+  .noprint,.acts,.tbl th.acts-h{display:none!important}
+  .printonly{display:block;margin-bottom:8px}
+  .card{border:0;padding:0}
+  .tbl th,.tbl td{border:1px solid #999;font-size:11px;padding:4px 6px;color:#000}
+  .falta,.pill{background:none!important;color:#000!important;padding:0}
+}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top noprint">
+    <div class="logo"><span class="g">Geo</span><span class="b">biol</span></div>
+    <h1 id="hTitle">Claves de entrega</h1>
+    <span class="falta" id="syncPill" hidden>Cambios sin copia guardada</span>
+  </header>
+  <div class="bar noprint"></div>
+
+  <nav class="tabs noprint" role="tablist" aria-label="Secciones">
+    <button type="button" role="tab" id="tabBtnClaves" aria-selected="true">Claves de entrega</button>
+    <button type="button" role="tab" id="tabBtnBoveda" aria-selected="false">Contraseñas</button>
+  </nav>
+
+  <div id="tabClaves">
+  <div class="grid noprint">
+
+    <!-- Generador -->
+    <div class="stack">
+      <section class="card" aria-labelledby="hGen">
+        <h2 id="hGen">Clave</h2>
+        <div class="keycard">
+          <div class="key" id="keyBox" role="img" aria-label="Clave sin generar"><span>·</span><span>·</span><span>·</span><span>·</span></div>
+          <div class="keymeta"><span class="keystate" id="keyState">Sin generar</span></div>
+          <div class="keyactions">
+            <button type="button" class="btn primary" id="btnGen">Generar clave</button>
+            <button type="button" class="btn" id="btnCopyKey">Copiar</button>
+          </div>
+        </div>
+        <div class="manual">
+          <label class="f">O escribe una clave
+            <input type="text" id="fManual" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="4 dígitos" autocomplete="off">
+          </label>
+          <button type="button" class="btn" id="btnManual">Usar</button>
+        </div>
+        <p class="manualmsg" id="manualMsg" role="status"></p>
+        <p class="avail" id="avail"></p>
+        <button type="button" class="btn sm" id="btnReset">Liberar todas las claves</button>
+        <details class="rules">
+          <summary>Reglas de la clave</summary>
+          <p class="hint" style="margin-top:8px">Siempre 4 dígitos sin ninguno repetido: se descartan 4444, 4445, 4455.</p>
+          <label><input type="checkbox" id="optSeq"><span>Evitar secuencias fáciles<small>1234, 2345, 4321, 0123…</small></span></label>
+          <label><input type="checkbox" id="optUsed"><span>No repetir claves en uso<small>Una clave vuelve a estar disponible solo al marcarla como recogida o al liberar todas.</small></span></label>
+          <label><input type="checkbox" id="optPair"><span>Permitir un solo par repetido<small>Habilita claves como 4456 (hay más opciones, menos estricto).</small></span></label>
+        </details>
+      </section>
+    </div>
+
+    <!-- Formulario -->
+    <section class="card" aria-labelledby="hForm">
+      <h2 id="hForm">Datos del envío</h2>
+      <div class="banner" id="editBanner" hidden></div>
+      <form id="form" autocomplete="off">
+        <div class="fields">
+          <label class="f">Fecha
+            <input type="date" id="fFecha" required>
+          </label>
+          <label class="f">Departamento
+            <select id="fDepto"><option value="">— Elegir —</option></select>
+          </label>
+          <label class="f">Empresa de transportes
+            <input type="text" id="fEmpresa" list="dlEmpresa" placeholder="Ej. Olva Courier">
+            <datalist id="dlEmpresa"></datalist>
+          </label>
+          <label class="f">Agencia destino
+            <input type="text" id="fAgencia" list="dlAgencia" placeholder="Ej. Agencia Av. Ejército">
+            <datalist id="dlAgencia"></datalist>
+          </label>
+          <label class="f full">Producto GEOBIOL enviado
+            <input type="text" id="fProducto" list="dlProducto" placeholder="Producto y cantidad">
+            <datalist id="dlProducto"></datalist>
+          </label>
+        </div>
+        <details class="more" id="more">
+          <summary>Más datos (opcional)</summary>
+          <div class="fields">
+            <label class="f">Cliente / destinatario
+              <input type="text" id="fCliente">
+            </label>
+            <label class="f">N.° de guía u orden
+              <input type="text" id="fGuia" inputmode="text">
+            </label>
+            <label class="f">Estado (solo "Recogido" libera la clave)
+              <select id="fEstado"></select>
+            </label>
+            <label class="f full">Notas
+              <textarea id="fNotas" rows="2"></textarea>
+            </label>
+          </div>
+        </details>
+        <div class="formactions">
+          <button type="submit" class="btn primary" id="btnSave">Guardar en la lista</button>
+          <button type="button" class="btn" id="btnCancel" hidden>Cancelar edición</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Lista -->
+  <section class="card" style="margin-top:16px" aria-labelledby="hList">
+    <h2 id="hList" class="noprint">Lista de claves</h2>
+    <div class="printonly"><b>GEOBIOL · Claves de entrega</b> — impreso el <span id="printDate"></span></div>
+    <div class="toolbar noprint">
+      <input type="search" id="q" placeholder="Buscar clave, empresa, agencia, producto…" aria-label="Buscar">
+      <select id="flt" aria-label="Filtrar">
+        <option value="all">Todas</option>
+        <option value="inc">Incompletas</option>
+        <option value="uso">Claves en uso</option>
+        <option value="libres">Claves liberadas</option>
+        <option value="Pendiente">Pendientes</option>
+        <option value="Entregado">Entregadas al transporte</option>
+        <option value="Recogido">Recogidas</option>
+        <option value="Observado">Observadas</option>
+      </select>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="listHost"></div>
+  </section>
+
+  <!-- Llevar a otro dispositivo -->
+  <section class="card noprint" style="margin-top:16px" aria-labelledby="hSync">
+    <h2 id="hSync">Llevar los datos a otro dispositivo</h2>
+    <div class="exports"><button type="button" class="btn primary" id="xCopy">Guardar copia con datos (.html)</button></div>
+    <p class="hint">Genera un archivo igual a este programa pero con tu lista adentro. Pásalo al celular (WhatsApp, Drive, correo o cable) y ábrelo ahí. Al volver, haz lo mismo desde el celular y abre ese archivo en la PC: los datos de ambos se juntan sin perder nada.</p>
+    <p class="hint" id="syncState"></p>
+  </section>
+
+  <!-- Exportar -->
+  <section class="card noprint" style="margin-top:16px" aria-labelledby="hExp">
+    <h2 id="hExp">Descargar y respaldo</h2>
+    <div class="exports">
+      <button type="button" class="btn" id="xCsv">CSV (Excel / Sheets)</button>
+      <button type="button" class="btn" id="xXls">Excel (.xls)</button>
+      <button type="button" class="btn" id="xTsv">Copiar tabla</button>
+      <button type="button" class="btn" id="xPrint">Imprimir / PDF</button>
+      <button type="button" class="btn primary" id="xJson">Respaldo (.json)</button>
+      <label class="btn" for="fileImport" tabindex="0" id="lblImport">Restaurar respaldo</label>
+      <input type="file" id="fileImport" accept=".json,application/json">
+    </div>
+    <p class="hint"><b>Copiar tabla</b> deja los datos listos para pegar directo en una hoja de Excel o Google Sheets. En Excel, el .xls puede mostrar un aviso de formato; ábrelo igual.</p>
+  </section>
+  </div><!-- /tabClaves -->
+
+  <!-- ===== Contraseñas (bóveda cifrada) ===== -->
+  <div id="tabVault" class="noprint" hidden>
+
+    <section class="card vnarrow" id="vNoCrypto" hidden>
+      <h2>Cifrado no disponible</h2>
+      <p>Este navegador, o la forma en que se abrió el archivo, no permite el cifrado que necesita la bóveda. Por seguridad no guardo contraseñas sin cifrar. Ábrelo con Chrome desde el gestor de archivos del teléfono o directamente en la PC. La pestaña de claves de entrega sigue funcionando normal.</p>
+    </section>
+
+    <!-- Crear -->
+    <section class="card vnarrow" id="vCreate" hidden aria-labelledby="hVc">
+      <h2 id="hVc">Crea tu bóveda</h2>
+      <p class="hint" style="margin-top:0">La contraseña maestra cifra todo lo que guardes aquí. No se guarda en ningún lado: si la olvidas, nadie podrá recuperar los datos. Una frase de 4 o 5 palabras al azar es fuerte y fácil de recordar.</p>
+      <div class="fields">
+        <label class="f full">Contraseña maestra
+          <span class="pwrow"><input type="password" id="vNew1" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="eye" id="vNewEye"></button></span>
+        </label>
+        <label class="f full">Repítela
+          <input type="password" id="vNew2" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </label>
+      </div>
+      <p class="hint" id="vNewMeter"></p>
+      <label class="chk"><input type="checkbox" id="vAck"><span>Entiendo que si olvido la contraseña maestra no hay forma de recuperar los datos.</span></label>
+      <div class="formactions">
+        <button type="button" class="btn primary" id="vBtnCreate">Crear bóveda</button>
+        <button type="button" class="btn" id="vBtnImportNew">Ya tengo un respaldo cifrado</button>
+      </div>
+      <p class="manualmsg" id="vCreateMsg" role="status"></p>
+    </section>
+
+    <!-- Bloqueada -->
+    <section class="card vnarrow" id="vLock" hidden aria-labelledby="hVl">
+      <h2 id="hVl">Bóveda bloqueada</h2>
+      <label class="f">Contraseña maestra
+        <span class="pwrow"><input type="password" id="vPass" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="eye" id="vPassEye"></button></span>
+      </label>
+      <div class="formactions"><button type="button" class="btn primary" id="vBtnUnlock">Desbloquear</button></div>
+      <p class="manualmsg" id="vLockMsg" role="status"></p>
+      <div id="vReplace" class="banner" hidden>
+        Esto reemplaza la bóveda guardada en este dispositivo por la del archivo. Lo que no esté en ese respaldo se pierde.
+        <div class="formactions" style="margin-top:10px">
+          <button type="button" class="btn danger" id="vBtnReplace">Reemplazar</button>
+          <button type="button" class="btn" id="vBtnReplaceCancel">Cancelar</button>
+        </div>
+      </div>
+      <details class="more"><summary>Otras opciones</summary>
+        <button type="button" class="btn sm" id="vBtnImportLocked">Reemplazar con un respaldo cifrado…</button>
+      </details>
+    </section>
+
+    <!-- Abierta -->
+    <div id="vOpen" hidden>
+      <div class="vtop">
+        <span class="tag">Desbloqueada</span>
+        <span class="hint" id="vTimer">Se bloquea sola tras 3 minutos sin actividad.</span>
+        <button type="button" class="btn sm" id="vBtnLock">Bloquear ahora</button>
+        <span class="falta" id="vPillBackup" hidden>Cambios sin respaldo</span>
+      </div>
+
+      <div class="grid">
+        <section class="card" aria-labelledby="hGenP">
+          <h2 id="hGenP">Generador</h2>
+          <div class="gout" id="gOut" aria-label="Contraseña generada"></div>
+          <p class="avail" id="gMeta"></p>
+          <div class="gbtns">
+            <button type="button" class="btn primary" id="gBtn">Generar otra</button>
+            <button type="button" class="btn" id="gCopy">Copiar</button>
+            <button type="button" class="btn" id="gUse">Usar en el registro</button>
+          </div>
+          <label class="f" style="margin-top:16px"><span>Longitud: <b id="gLenV">16</b> caracteres</span>
+            <input type="range" id="gLen" min="8" max="64" value="16">
+          </label>
+          <div class="gopts">
+            <label class="o"><input type="checkbox" id="gMay" checked>Mayúsculas</label>
+            <label class="o"><input type="checkbox" id="gMin" checked>Minúsculas</label>
+            <label class="o"><input type="checkbox" id="gNum" checked>Números</label>
+            <label class="o"><input type="checkbox" id="gSim" checked>Símbolos (! @ # $ % &amp; * ? - _ + = .)</label>
+            <label class="o"><input type="checkbox" id="gAmb">Evitar caracteres que se confunden (I l 1 O 0 o)</label>
+          </div>
+          <p class="hint">Se genera con el generador aleatorio seguro del navegador, el mismo tipo de fuente que usa el módulo secrets de Python.</p>
+        </section>
+
+        <section class="card" aria-labelledby="hVf">
+          <h2 id="hVf">Registrar contraseña</h2>
+          <div class="banner" id="vBanner" hidden></div>
+          <div class="fields">
+            <label class="f full">Dónde se usa (cuenta o servicio)
+              <input type="text" id="vSitio" list="dlSitio" autocomplete="off" placeholder="Ej. Gmail de GEOBIOL">
+              <datalist id="dlSitio"></datalist>
+            </label>
+            <label class="f full">Usuario o correo
+              <input type="text" id="vUsuario" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </label>
+            <label class="f full">Contraseña
+              <span class="pwrow"><input type="password" id="vClave" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="eye" id="vClaveEye"></button></span>
+            </label>
+            <label class="f full">Dirección web (opcional)
+              <input type="text" id="vUrl" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </label>
+            <label class="f full">Notas (opcional)
+              <textarea id="vNotas" rows="2"></textarea>
+            </label>
+          </div>
+          <div class="formactions">
+            <button type="button" class="btn primary" id="vBtnSave">Guardar en la bóveda</button>
+            <button type="button" class="btn" id="vBtnCancel" hidden>Cancelar edición</button>
+          </div>
+        </section>
+      </div>
+
+      <section class="card" style="margin-top:16px" aria-labelledby="hVlist">
+        <h2 id="hVlist">Contraseñas guardadas</h2>
+        <div class="toolbar">
+          <input type="search" id="vQ" placeholder="Buscar por cuenta, usuario o notas…" aria-label="Buscar" autocomplete="off">
+          <span class="count" id="vCount"></span>
+        </div>
+        <div id="vList"></div>
+      </section>
+
+      <section class="card" style="margin-top:16px" aria-labelledby="hVb">
+        <h2 id="hVb">Respaldo cifrado</h2>
+        <div class="exports">
+          <button type="button" class="btn primary" id="vBtnExport">Descargar respaldo (.json)</button>
+          <button type="button" class="btn" id="vBtnMergeFile">Unir un respaldo…</button>
+        </div>
+        <div id="vMerge" class="banner" hidden style="margin-top:12px">
+          Escribe la contraseña maestra de ese respaldo. Se unirán sus cuentas con las de esta bóveda y gana la versión más reciente de cada una.
+          <label class="f" style="margin-top:10px">Contraseña maestra del respaldo
+            <input type="password" id="vFilePass" autocomplete="off" autocapitalize="off" spellcheck="false">
+          </label>
+          <div class="formactions" style="margin-top:10px">
+            <button type="button" class="btn primary" id="vBtnMerge">Unir</button>
+            <button type="button" class="btn" id="vBtnMergeCancel">Cancelar</button>
+          </div>
+          <p class="manualmsg" id="vMergeMsg" role="status"></p>
+        </div>
+        <p class="hint">El respaldo es un archivo aparte, ya cifrado: sin tu contraseña maestra no se puede leer. Las contraseñas no viajan dentro de las copias .html de las claves de entrega ni en sus respaldos. Para llevarlas al celular, usa este archivo.</p>
+        <p class="hint" id="vBackupState"></p>
+        <details class="more"><summary>Más opciones</summary>
+          <div class="fields">
+            <label class="f full">Contraseña maestra actual
+              <input type="password" id="vCur" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </label>
+            <label class="f">Nueva contraseña maestra
+              <input type="password" id="vChg1" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </label>
+            <label class="f">Repite la nueva
+              <input type="password" id="vChg2" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </label>
+          </div>
+          <div class="formactions"><button type="button" class="btn" id="vBtnChange">Cambiar contraseña maestra</button></div>
+          <p class="manualmsg" id="vChgMsg" role="status"></p>
+          <p class="hint">Los respaldos que ya descargaste siguen abriéndose con la contraseña que tenían en ese momento.</p>
+          <div class="formactions" style="margin-top:16px"><button type="button" class="btn danger" id="vBtnKill">Borrar la bóveda de este dispositivo</button></div>
+        </details>
+      </section>
+    </div>
+
+    <input type="file" id="vFile" accept=".json,application/json" hidden>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="application/json" id="datos">null</script>
+<script>
+var CLEAN=document.documentElement.cloneNode(true); /* copia limpia del programa, antes de que cambie nada */
+/*LOGIC-START*/
+function isSequence(d){
+  var up=true, down=true;
+  for(var i=1;i<4;i++){
+    if(d[i]-d[i-1]!==1) up=false;
+    if(d[i]-d[i-1]!==-1) down=false;
+  }
+  return up||down;
+}
+function isValidKey(k,o){
+  if(!/^\d{4}$/.test(k)) return false;
+  var d=k.split('').map(Number);
+  var distinct=new Set(d).size;
+  if(distinct<(o.allowPair?3:4)) return false;
+  if(o.avoidSeq && isSequence(d)) return false;
+  return true;
+}
+function candidates(o,used){
+  var out=[];
+  for(var n=0;n<10000;n++){
+    var k=String(n).padStart(4,'0');
+    if(isValidKey(k,o) && !(o.avoidUsed && used.has(k))) out.push(k);
+  }
+  return out;
+}
+function randInt(max){
+  var lim=Math.floor(0x100000000/max)*max, buf=new Uint32Array(1);
+  do{ crypto.getRandomValues(buf); }while(buf[0]>=lim);
+  return buf[0]%max;
+}
+function pickKey(o,used){
+  var c=candidates(o,used);
+  return c.length ? c[randInt(c.length)] : null;
+}
+/*LOGIC-END*/
+
+var LS_DATA='geobiol_claves_v1', LS_SET='geobiol_claves_ajustes_v1';
+var EMPRESAS=['Olva Courier','Shalom','Cruz del Sur','Marvisur','Civa','Flores','Movil Bus','Oltursa','Ormeño','Cromotex','Tepsa'];
+var DEPTOS=['Amazonas','Áncash','Apurímac','Arequipa','Ayacucho','Cajamarca','Callao','Cusco','Huancavelica','Huánuco','Ica','Junín','La Libertad','Lambayeque','Lima','Loreto','Madre de Dios','Moquegua','Pasco','Piura','Puno','San Martín','Tacna','Tumbes','Ucayali'];
+var ESTADOS=['Pendiente','Entregado','Recogido','Observado'];
+var COLS=['Clave','Fecha','Empresa de transporte','Departamento','Agencia destino','Producto GEOBIOL','Cliente','N° guía','Estado','Situación de la clave','Notas'];
+var REQ=[['empresa','empresa'],['departamento','departamento'],['agencia','agencia'],['producto','producto']];
+
+var $=function(id){return document.getElementById(id)};
+var state={entries:[],set:{allowPair:false,avoidSeq:true,avoidUsed:true,lastBackup:null},key:null,manual:false,editing:null,armed:null,q:'',filter:'all'};
+var storageWarned=false;
+
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+function persist(){
+  var ok=lsSet(LS_DATA,state.entries) && lsSet(LS_SET,state.set);
+  if(!ok && !storageWarned){storageWarned=true;toast('No se pudo guardar en este navegador. Descarga un respaldo.');}
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fmtDate(iso){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(iso||'');return m?m[3]+'/'+m[2]+'/'+m[1]:(iso||'')}
+function opts(){return {allowPair:state.set.allowPair,avoidSeq:state.set.avoidSeq,avoidUsed:state.set.avoidUsed}}
+function usedSet(){
+  var s=new Set();
+  state.entries.forEach(function(e){ if(e.id!==state.editing && !e.libre) s.add(e.clave); });
+  return s;
+}
+function missing(e){return REQ.filter(function(r){return !String(e[r[0]]||'').trim()}).map(function(r){return r[1]})}
+
+var toastTimer;
+function toast(m){
+  var t=$('toast'); t.textContent=m; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show')},2600+m.length*25);
+}
+function copyText(t,msg){
+  function fallback(){
+    var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); var ok=false;
+    try{ok=document.execCommand('copy')}catch(_){}
+    ta.remove(); toast(ok?(msg||'Copiado'):'No se pudo copiar');
+  }
+  try{
+    navigator.clipboard.writeText(t).then(function(){toast(msg||'Copiado')},fallback);
+  }catch(e){fallback()}
+}
+
+/* ---------- Clave ---------- */
+function renderKey(){
+  var k=state.key, sp=$('keyBox').children;
+  for(var i=0;i<4;i++) sp[i].textContent=k?k[i]:'·';
+  $('keyBox').setAttribute('aria-label',k?('Clave '+k):'Clave sin generar');
+  $('keyState').textContent=!k?'Sin generar':(state.editing?'Editando entrada':(state.manual?'Manual · sin guardar':'Sin guardar'));
+}
+function manualMsg(txt,kind){var m=$('manualMsg');m.textContent=txt||'';m.className='manualmsg'+(kind?' '+kind:'')}
+function useManual(){
+  var v=$('fManual').value.replace(/\D/g,'');
+  if(!/^\d{4}$/.test(v)){manualMsg('Escribe exactamente 4 dígitos.','bad');return}
+  if(usedSet().has(v)){manualMsg('La clave '+v+' ya está en uso. Márcala como recogida en la lista o elige otra.','bad');return}
+  state.key=v; state.manual=true; renderKey();
+  if(!isValidKey(v,opts())) manualMsg('La clave '+v+' no cumple las reglas (dígitos repetidos o secuencia). Se registrará igual, como manual.','warn');
+  else manualMsg('Clave '+v+' lista para registrar.');
+}
+function renderAvail(){
+  var n=candidates(opts(),usedSet()).length;
+  var tot=candidates({allowPair:state.set.allowPair,avoidSeq:state.set.avoidSeq,avoidUsed:false},new Set()).length;
+  var uso=state.entries.filter(function(e){return !e.libre}).length;
+  $('avail').textContent=(n?('Disponibles: '+n.toLocaleString('es-PE')+' de '+tot.toLocaleString('es-PE')):'No quedan claves disponibles')+' · En uso: '+uso.toLocaleString('es-PE')+'.';
+}
+function resetBtn(){state.armedReset=false;var b=$('btnReset');b.textContent='Liberar todas las claves';b.classList.remove('danger','armed')}
+function generate(){
+  var k=pickKey(opts(),usedSet());
+  if(!k){toast('No quedan claves disponibles. Cambia las reglas.');return}
+  state.key=k; state.manual=false; $('fManual').value=''; manualMsg(''); renderKey();
+}
+
+/* ---------- Formulario ---------- */
+function resetForm(){
+  $('form').reset();
+  $('fFecha').value=todayISO();
+  $('fEstado').value='Pendiente';
+  state.editing=null; state.key=null; state.manual=false; $('fManual').value=''; manualMsg('');
+  $('editBanner').hidden=true; $('btnCancel').hidden=true;
+  $('btnSave').textContent='Guardar en la lista';
+  renderKey(); renderAvail();
+}
+function startEdit(id){
+  var e=state.entries.filter(function(x){return x.id===id})[0]; if(!e) return;
+  state.editing=id; state.key=e.clave; state.manual=!!e.manual; $('fManual').value=''; manualMsg('');
+  $('fFecha').value=e.fecha||todayISO();
+  $('fEmpresa').value=e.empresa||''; $('fDepto').value=e.departamento||'';
+  $('fAgencia').value=e.agencia||''; $('fProducto').value=e.producto||'';
+  $('fCliente').value=e.cliente||''; $('fGuia').value=e.guia||'';
+  $('fEstado').value=e.estado||'Pendiente'; $('fNotas').value=e.notas||'';
+  if(e.cliente||e.guia||e.notas||(e.estado&&e.estado!=='Pendiente')) $('more').open=true;
+  $('editBanner').textContent='Editando la entrada de la clave '+e.clave+'. Puedes completar los datos que faltaban o generar otra clave.';
+  $('editBanner').hidden=false; $('btnCancel').hidden=false;
+  $('btnSave').textContent='Guardar cambios';
+  renderKey(); renderAvail();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function readForm(){
+  return {
+    fecha:$('fFecha').value||todayISO(),
+    empresa:$('fEmpresa').value.trim(), departamento:$('fDepto').value,
+    agencia:$('fAgencia').value.trim(), producto:$('fProducto').value.trim(),
+    cliente:$('fCliente').value.trim(), guia:$('fGuia').value.trim(),
+    estado:$('fEstado').value||'Pendiente', notas:$('fNotas').value.trim()
+  };
+}
+function onSubmit(ev){
+  ev.preventDefault();
+  if(!state.key){toast('Primero genera o escribe una clave.');return}
+  if(state.manual && usedSet().has(state.key)){toast('La clave '+state.key+' ya está en uso.');return}
+  var d=readForm();
+  if(state.editing){
+    var e=state.entries.filter(function(x){return x.id===state.editing})[0];
+    var reocupada=false;
+    if(e){
+      var prev=e.estado, antes=e.clave;
+      Object.assign(e,d,{clave:state.key,manual:state.manual,mod:Date.now()});
+      if(e.libre && state.key!==antes){ e.libre=false; if(e.estado==='Recogido') e.estado='Entregado'; reocupada=true }
+      else if(d.estado==='Recogido'&&prev!=='Recogido') e.libre=true;
+    }
+    toast(reocupada?('Clave '+state.key+' registrada y en uso'):'Cambios guardados');
+  }else{
+    state.entries.push(Object.assign({id:uid(),creado:Date.now(),mod:Date.now(),libre:d.estado==='Recogido',manual:state.manual,clave:state.key},d));
+    toast('Clave '+state.key+' guardada');
+  }
+  persist(); resetForm(); renderAll();
+}
+
+/* ---------- Lista ---------- */
+function sorted(){
+  return state.entries.slice().sort(function(a,b){
+    return (b.fecha||'').localeCompare(a.fecha||'') || (b.creado||0)-(a.creado||0);
+  });
+}
+function matches(e){
+  if(state.filter==='inc' && !missing(e).length) return false;
+  if(state.filter==='uso' && e.libre) return false;
+  if(state.filter==='libres' && !e.libre) return false;
+  if(ESTADOS.indexOf(state.filter)>=0 && (e.estado||'Pendiente')!==state.filter) return false;
+  var q=state.q.trim().toLowerCase(); if(!q) return true;
+  return [e.clave,fmtDate(e.fecha),e.empresa,e.departamento,e.agencia,e.producto,e.cliente,e.guia,e.estado,e.notas]
+    .join(' ').toLowerCase().indexOf(q)>=0;
+}
+function cell(v,req){return v?esc(v):(req?'<span class="falta">falta</span>':'')}
+function renderList(){
+  var all=sorted(), rows=all.filter(matches);
+  var inc=state.entries.filter(function(e){return missing(e).length}).length;
+  var uso=state.entries.filter(function(e){return !e.libre}).length;
+  $('count').textContent=state.entries.length+(state.entries.length===1?' clave':' claves')+' · '+uso+' en uso'+(inc?' · '+inc+' incompleta'+(inc>1?'s':''):'');
+  var host=$('listHost');
+  var dup={}; state.entries.forEach(function(e){if(!e.libre)dup[e.clave]=(dup[e.clave]||0)+1});
+  if(!state.entries.length){
+    host.innerHTML='<div class="empty"><b>Aún no hay claves guardadas</b>Genera una clave, llena los datos del envío y pulsa Guardar. Lo que no tengas a la mano lo completas después con Editar.</div>';
+    return;
+  }
+  if(!rows.length){host.innerHTML='<div class="empty"><b>Sin resultados</b>Prueba con otra búsqueda o cambia el filtro.</div>';return}
+  var h='<div class="tscroll"><table class="tbl"><thead><tr><th>Clave</th><th>Fecha</th><th>Empresa</th><th>Departamento</th><th>Agencia</th><th>Producto</th><th>Detalle</th><th>Estado</th><th class="acts-h"></th></tr></thead><tbody>';
+  rows.forEach(function(e){
+    var detalle=[e.cliente,e.guia?('Guía '+e.guia):''].filter(Boolean).map(esc).join(' · ');
+    var nota=e.notas?'<div class="nota">'+esc(e.notas)+'</div>':'';
+    var est=e.estado||'Pendiente', armed=state.armed===e.id;
+    h+='<tr data-id="'+esc(e.id)+'"'+(e.libre?' class="libre"':'')+'>'
+      +'<td class="c-key" data-label="Clave"><b>'+esc(e.clave)+'</b>'+(!e.libre&&dup[e.clave]>1?' <span class="falta">repetida</span>':'')+(e.libre?' <span class="tag">libre</span>':'')+(e.manual?' <span class="tag">manual</span>':'')+'</td>'
+      +'<td data-label="Fecha">'+esc(fmtDate(e.fecha))+'</td>'
+      +'<td data-label="Empresa">'+cell(e.empresa,true)+'</td>'
+      +'<td data-label="Departamento">'+cell(e.departamento,true)+'</td>'
+      +'<td data-label="Agencia">'+cell(e.agencia,true)+'</td>'
+      +'<td data-label="Producto">'+cell(e.producto,true)+'</td>'
+      +'<td data-label="Detalle">'+((detalle||nota)?detalle+nota:'')+'</td>'
+      +'<td data-label="Estado"><span class="pill '+esc(est)+'">'+esc(est)+'</span></td>'
+      +'<td class="acts">'
+        +'<button type="button" class="btn sm" data-act="edit">Editar</button>'
+        +'<button type="button" class="btn sm" data-act="msg">Copiar mensaje</button>'
+        +(e.libre?'<button type="button" class="btn sm" data-act="react">Reactivar clave</button>':'<button type="button" class="btn sm" data-act="free">Marcar recogida</button>')
+        +'<button type="button" class="btn sm danger'+(armed?' armed':'')+'" data-act="del">'+(armed?'¿Borrar?':'Borrar')+'</button>'
+      +'</td></tr>';
+  });
+  host.innerHTML=h+'</tbody></table></div>';
+}
+function renderLists(){
+  function fill(id,vals){
+    var seen={},out=[];
+    vals.forEach(function(v){v=String(v||'').trim();var k=v.toLowerCase();if(v&&!seen[k]){seen[k]=1;out.push(v)}});
+    out.sort(function(a,b){return a.localeCompare(b,'es')});
+    $(id).innerHTML=out.map(function(v){return '<option value="'+esc(v)+'">'}).join('');
+  }
+  fill('dlEmpresa',EMPRESAS.concat(state.entries.map(function(e){return e.empresa})));
+  fill('dlAgencia',state.entries.map(function(e){return e.agencia}));
+  fill('dlProducto',state.entries.map(function(e){return e.producto}));
+}
+/* ---------- Sincronizar entre dispositivos ---------- */
+function pad(n){return String(n).padStart(2,'0')}
+function fmtTs(ts){var d=new Date(ts);return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
+function firmaDe(list,del){
+  var parts=(list||[]).map(function(x){return x.id+':'+(Number(x.mod)||Number(x.creado)||0)}).sort();
+  var dels=Object.keys(del||{}).map(function(id){return id+'!'+del[id]}).sort();
+  var s=parts.join('|')+'#'+dels.join('|'), h=5381;
+  for(var i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0;
+  return (h>>>0).toString(16)+':'+parts.length;
+}
+function firma(){return firmaDe(state.entries,state.set.borrados)}
+function hayDatos(){return state.entries.length>0||Object.keys(state.set.borrados).length>0}
+function dirty(){return hayDatos()&&firma()!==state.set.firmaCopia}
+function mergeIn(list,del){
+  var tomb=state.set.borrados, before={}, cur={};
+  state.entries.forEach(function(e){before[e.id]=e.mod;cur[e.id]=e});
+  Object.keys(del||{}).forEach(function(id){var t=Number(del[id])||0;if(t>(tomb[id]||0))tomb[id]=t});
+  (list||[]).forEach(function(x){
+    if(!x||!/^\d{4}$/.test(String(x.clave))) return;
+    var n=norm(x), c=cur[n.id];
+    if(!c||n.mod>c.mod) cur[n.id]=n;
+  });
+  var out=[];
+  Object.keys(cur).forEach(function(id){var e=cur[id];if(!(tomb[id]&&tomb[id]>=e.mod)) out.push(e)});
+  var res={added:0,updated:0,removed:0}, after={};
+  out.forEach(function(e){after[e.id]=1;if(!(e.id in before))res.added++;else if(e.mod>before[e.id])res.updated++});
+  Object.keys(before).forEach(function(id){if(!after[id])res.removed++});
+  state.entries=out;
+  return res;
+}
+function dupCount(){
+  var c={},n=0;state.entries.forEach(function(e){if(!e.libre)c[e.clave]=(c[e.clave]||0)+1});
+  Object.keys(c).forEach(function(k){if(c[k]>1)n++});return n;
+}
+function describeMerge(r,prefix){
+  var p=[];
+  if(r.added)p.push(r.added+(r.added===1?' nueva':' nuevas'));
+  if(r.updated)p.push(r.updated+(r.updated===1?' actualizada':' actualizadas'));
+  if(r.removed)p.push(r.removed+(r.removed===1?' borrada':' borradas'));
+  var s=p.length?prefix+': '+p.join(', ')+'.':'No había nada nuevo en el archivo.';
+  if(dupCount()) s+=' Atención: hay claves repetidas, revísalas en la lista.';
+  return s;
+}
+function markCopy(){state.set.firmaCopia=firma();state.set.copiaTs=Date.now();persist();renderSync()}
+function buildCopy(){
+  var c=CLEAN.cloneNode(true), n=c.querySelector('#datos');
+  var payload={app:'geobiol-claves',version:2,guardado:Date.now(),entradas:state.entries,borrados:state.set.borrados};
+  n.textContent=JSON.stringify(payload).replace(/</g,'\\u003c');
+  return '<!doctype html>\n'+c.outerHTML;
+}
+function renderSync(){
+  var d=dirty(), p=$('syncPill'), s=$('syncState');
+  p.hidden=!d;
+  var ult=state.set.copiaTs?(' Última copia: '+fmtTs(state.set.copiaTs)+'.'):'';
+  if(!hayDatos()) s.textContent='Aún no hay datos. Los datos se guardan en este navegador y también viajan dentro de cada copia.';
+  else if(d) s.textContent='Hay cambios que todavía no están en ninguna copia. Guarda una copia antes de cerrar o cambiar de dispositivo.'+ult;
+  else s.textContent='Todo lo que ves está en la última copia guardada.'+ult;
+}
+function renderAll(){renderList();renderLists();renderAvail();renderSync()}
+
+function buildMsg(e){
+  var destino=[e.departamento,e.agencia].filter(Boolean).join(' – ');
+  var L=['Clave de entrega: '+e.clave];
+  if(e.empresa) L.push('Transporte: '+e.empresa);
+  if(destino) L.push('Destino: '+destino);
+  if(e.producto) L.push('Producto: '+e.producto);
+  if(e.guia) L.push('Guía: '+e.guia);
+  L.push('Fecha de envío: '+fmtDate(e.fecha));
+  return L.join('\n');
+}
+
+/* ---------- Exportar ---------- */
+function rowArr(e){return [e.clave,fmtDate(e.fecha),e.empresa||'',e.departamento||'',e.agencia||'',e.producto||'',e.cliente||'',e.guia||'',e.estado||'Pendiente',e.libre?'Libre':'En uso',e.notas||'']}
+function q(v){return '"'+String(v).replace(/"/g,'""')+'"'}
+function buildCSV(){
+  var lines=[COLS.map(q).join(',')];
+  sorted().forEach(function(e){
+    var r=rowArr(e);
+    lines.push(['="'+r[0]+'"'].concat(r.slice(1).map(q)).join(','));
+  });
+  return '\uFEFF'+lines.join('\r\n');
+}
+function buildTSV(){
+  function c(v){return String(v).replace(/[\t\r\n]+/g,' ')}
+  var lines=[COLS.join('\t')];
+  sorted().forEach(function(e){
+    var r=rowArr(e);
+    lines.push(['="'+r[0]+'"'].concat(r.slice(1).map(c)).join('\t'));
+  });
+  return lines.join('\n');
+}
+function buildXLS(){
+  var txt=' style="mso-number-format:\'\\@\'"';
+  var h='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"></head><body><table border="1"><tr>'
+    +COLS.map(function(c){return '<th>'+esc(c)+'</th>'}).join('')+'</tr>';
+  sorted().forEach(function(e){
+    h+='<tr>'+rowArr(e).map(function(v,i){return '<td'+((i===0||i===1||i===7)?txt:'')+'>'+esc(v)+'</td>'}).join('')+'</tr>';
+  });
+  return h+'</table></body></html>';
+}
+function download(name,mime,content){
+  try{
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+    a.download=name; document.body.appendChild(a); a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);
+    return true;
+  }catch(e){toast('No se pudo descargar el archivo.');return false}
+}
+function needData(){if(!state.entries.length){toast('Aún no hay claves guardadas.');return false}return true}
+function norm(x){
+  var o={id:x.id||uid(),creado:x.creado||Date.now(),clave:String(x.clave)};
+  o.mod=Number(x.mod)||Number(x.creado)||0;
+  o.libre=!!x.libre;
+  o.manual=!!x.manual;
+  ['fecha','empresa','departamento','agencia','producto','cliente','guia','estado','notas'].forEach(function(k){o[k]=String(x[k]==null?'':x[k])});
+  if(ESTADOS.indexOf(o.estado)<0) o.estado='Pendiente';
+  return o;
+}
+
+/* ---------- Eventos ---------- */
+function init(){
+  var s=lsGet(LS_SET); if(s&&typeof s==='object') Object.assign(state.set,s);
+  var d=lsGet(LS_DATA); if(Array.isArray(d)) state.entries=d.filter(function(x){return x&&/^\d{4}$/.test(String(x.clave))}).map(norm);
+  if(!state.set.borrados||typeof state.set.borrados!=='object') state.set.borrados={};
+  var emb=null, aviso='';
+  try{emb=JSON.parse($('datos').textContent)}catch(_){}
+  if(emb&&Array.isArray(emb.entradas)){
+    var r=mergeIn(emb.entradas,emb.borrados);
+    if(r.added||r.updated||r.removed) aviso=describeMerge(r,'Se cargaron datos del archivo');
+    else if(emb.entradas.length) aviso='Datos del archivo cargados.';
+    if(firma()===firmaDe(emb.entradas,emb.borrados)){state.set.firmaCopia=firma();state.set.copiaTs=emb.guardado||Date.now()}
+    persist();
+  }
+
+  $('fDepto').innerHTML+=DEPTOS.map(function(x){return '<option>'+esc(x)+'</option>'}).join('');
+  $('fEstado').innerHTML=ESTADOS.map(function(x){return '<option>'+x+'</option>'}).join('');
+  $('printDate').textContent=fmtDate(todayISO());
+  $('optPair').checked=!!state.set.allowPair; $('optSeq').checked=!!state.set.avoidSeq; $('optUsed').checked=!!state.set.avoidUsed;
+
+  $('btnGen').addEventListener('click',generate);
+  $('btnManual').addEventListener('click',useManual);
+  $('fManual').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,4)});
+  $('fManual').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();useManual()}});
+  $('btnCopyKey').addEventListener('click',function(){state.key?copyText(state.key,'Clave copiada'):toast('Primero genera una clave.')});
+  [['optPair','allowPair'],['optSeq','avoidSeq'],['optUsed','avoidUsed']].forEach(function(p){
+    $(p[0]).addEventListener('change',function(){
+      state.set[p[1]]=$(p[0]).checked; persist();
+      if(state.key && !state.manual && !isValidKey(state.key,opts()) && !state.editing){state.key=null;renderKey()}
+      renderAvail();
+    });
+  });
+  $('form').addEventListener('submit',onSubmit);
+  $('btnCancel').addEventListener('click',function(){resetForm();toast('Edición cancelada')});
+  $('btnReset').addEventListener('click',function(){
+    var uso=state.entries.filter(function(e){return !e.libre}).length, b=$('btnReset');
+    if(!uso){toast('No hay claves en uso.');return}
+    if(!state.armedReset){
+      state.armedReset=true; b.textContent='¿Liberar '+uso+(uso===1?' clave':' claves')+'? Toca otra vez'; b.classList.add('danger','armed');
+      setTimeout(function(){if(state.armedReset)resetBtn()},4000);
+      return;
+    }
+    var now=Date.now();
+    state.entries.forEach(function(e){if(!e.libre){e.libre=true;e.mod=now}});
+    resetBtn(); persist(); renderAll();
+    toast(uso+(uso===1?' clave liberada':' claves liberadas')+'. El historial se conserva.');
+  });
+  $('q').addEventListener('input',function(){state.q=$('q').value;renderList()});
+  $('flt').addEventListener('change',function(){state.filter=$('flt').value;renderList()});
+
+  $('listHost').addEventListener('click',function(ev){
+    var b=ev.target.closest('button[data-act]'); if(!b) return;
+    var tr=b.closest('tr'), id=tr&&tr.getAttribute('data-id'), act=b.getAttribute('data-act');
+    var e=state.entries.filter(function(x){return x.id===id})[0]; if(!e) return;
+    if(act==='edit') startEdit(id);
+    else if(act==='msg') copyText(buildMsg(e),'Mensaje copiado');
+    else if(act==='free'){
+      e.libre=true; e.estado='Recogido'; e.mod=Date.now();
+      persist(); renderAll(); toast('Clave '+e.clave+' liberada: ya se puede reutilizar.');
+    }
+    else if(act==='react'){
+      var choque=state.entries.some(function(x){return x.id!==e.id&&!x.libre&&x.clave===e.clave});
+      if(choque){toast('La clave '+e.clave+' ya está en uso en otra entrada.');return}
+      e.libre=false; if(e.estado==='Recogido') e.estado='Entregado'; e.mod=Date.now();
+      persist(); renderAll(); toast('Clave '+e.clave+' en uso otra vez.');
+    }
+    else if(act==='del'){
+      if(state.armed===id){
+        state.entries=state.entries.filter(function(x){return x.id!==id});
+        state.set.borrados[id]=Date.now();
+        state.armed=null; if(state.editing===id) resetForm();
+        persist(); renderAll(); toast('Clave '+e.clave+' borrada');
+      }else{
+        state.armed=id; renderList();
+        setTimeout(function(){if(state.armed===id){state.armed=null;renderList()}},4000);
+      }
+    }
+  });
+
+  $('xCsv').addEventListener('click',function(){if(needData())download('claves-entregas-'+todayISO()+'.csv','text/csv;charset=utf-8',buildCSV())});
+  $('xXls').addEventListener('click',function(){if(needData())download('claves-entregas-'+todayISO()+'.xls','application/vnd.ms-excel',buildXLS())});
+  $('xTsv').addEventListener('click',function(){if(needData())copyText(buildTSV(),'Tabla copiada: pégala en Excel o Sheets')});
+  $('xPrint').addEventListener('click',function(){if(needData())window.print()});
+  $('xJson').addEventListener('click',function(){
+    if(!needData()) return;
+    var ok=download('claves-geobiol-respaldo-'+todayISO()+'.json','application/json',JSON.stringify({app:'geobiol-claves',version:2,exportado:todayISO(),entradas:state.entries,borrados:state.set.borrados},null,2));
+    if(ok){markCopy();toast('Respaldo descargado')}
+  });
+  $('xCopy').addEventListener('click',function(){
+    if(!hayDatos()){toast('Aún no hay datos para guardar.');return}
+    var d=new Date(), name='claves-entrega-'+todayISO()+'-'+pad(d.getHours())+pad(d.getMinutes())+'.html';
+    if(download(name,'text/html;charset=utf-8',buildCopy())){markCopy();toast('Copia guardada: '+name)}
+  });
+  $('lblImport').addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();$('fileImport').click()}});
+  $('fileImport').addEventListener('change',function(ev){
+    var f=ev.target.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var j=JSON.parse(r.result), arr=Array.isArray(j)?j:j.entradas;
+        if(!Array.isArray(arr)) throw new Error('formato');
+        var res=mergeIn(arr,Array.isArray(j)?null:j.borrados);
+        persist(); renderAll(); toast(describeMerge(res,'Respaldo restaurado'));
+      }catch(e){toast('El archivo no es un respaldo válido.')}
+      ev.target.value='';
+    };
+    r.readAsText(f);
+  });
+
+  resetForm(); renderAll();
+  if(aviso) toast(aviso);
+  vaultInit();
+}
+
+/* ================= Bóveda de contraseñas =================
+   Todo lo guardado se cifra con AES-GCM 256. La llave sale de la contraseña maestra con PBKDF2-SHA256 (600 000 vueltas).
+   Sin la contraseña maestra solo existe texto cifrado: no hay ninguna "capa" que quitar. */
+var VK='geobiol_boveda_v1', VM='geobiol_boveda_meta_v1';
+var V_ITER=600000, V_IDLE=180000, V_AWAY=60000;
+var V={blob:null,key:null,salt:null,iter:V_ITER,data:null,unlocked:false,shown:{},editing:null,armedDel:null,armedKill:false,
+  pending:null,fails:0,until:0,last:0,hiddenAt:0,q:'',gen:'',busy:false,queue:Promise.resolve(),meta:{cambio:0,respaldo:0}};
+var VENC=(typeof TextEncoder!=='undefined')?new TextEncoder():null, VDEC=(typeof TextDecoder!=='undefined')?new TextDecoder():null;
+var EYES=[['vNewEye',['vNew1','vNew2']],['vPassEye',['vPass']],['vClaveEye',['vClave']]];
+var GSETS={may:'ABCDEFGHIJKLMNOPQRSTUVWXYZ',min:'abcdefghijklmnopqrstuvwxyz',num:'0123456789',sim:'!@#$%&*?-_+='+'.'};
+
+function vOk(){return !!(window.crypto&&window.crypto.subtle&&window.crypto.getRandomValues&&VENC&&VDEC&&window.btoa&&window.atob)}
+function b64(buf){var u=new Uint8Array(buf),s='';for(var i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s)}
+function unb64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function vDerive(pass,salt,iter){
+  var km=await crypto.subtle.importKey('raw',VENC.encode(pass),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+}
+async function vSeal(key,json,salt,iter){
+  var iv=crypto.getRandomValues(new Uint8Array(12));
+  var ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,VENC.encode(json));
+  return {app:'geobiol-boveda',v:1,kdf:'PBKDF2-SHA256',iter:iter,salt:b64(salt),iv:b64(iv),ct:b64(ct)};
+}
+function vValidBlob(b){
+  return !!(b&&typeof b==='object'&&b.app==='geobiol-boveda'&&b.v===1&&typeof b.salt==='string'&&typeof b.iv==='string'&&typeof b.ct==='string'
+    &&typeof b.iter==='number'&&b.iter>=100000&&b.iter<=5000000);
+}
+async function vOpenBlob(b,pass){
+  var salt=unb64(b.salt), key=await vDerive(pass,salt,b.iter);
+  var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(b.iv)},key,unb64(b.ct));
+  return {key:key,salt:salt,iter:b.iter,data:vNormData(JSON.parse(VDEC.decode(pt)))};
+}
+function vNormE(x){
+  if(!x||typeof x!=='object') return null;
+  return {id:String(x.id||uid()),sitio:String(x.sitio||''),usuario:String(x.usuario||''),clave:String(x.clave==null?'':x.clave),
+    url:String(x.url||''),notas:String(x.notas||''),creado:Number(x.creado)||Date.now(),mod:Number(x.mod)||Number(x.creado)||0};
+}
+function vNormData(d){
+  var list=(d&&Array.isArray(d.entradas))?d.entradas:[];
+  return {entradas:list.map(vNormE).filter(Boolean),borrados:(d&&d.borrados&&typeof d.borrados==='object')?d.borrados:{}};
+}
+
+/* ---- almacenamiento (solo guarda texto cifrado) ---- */
+function vLsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function vLsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+function vSave(){
+  var key=V.key, salt=V.salt, iter=V.iter, json=V.data?JSON.stringify(V.data):null;
+  V.queue=V.queue.then(async function(){
+    if(!key||json==null) return;
+    var blob=await vSeal(key,json,salt,iter);
+    V.blob=blob;
+    var ok=vLsSet(VK,blob);
+    V.meta.cambio=Date.now(); vLsSet(VM,V.meta);
+    if(!ok) toast('No se pudo guardar la bóveda en este navegador. Descarga el respaldo cifrado.');
+    vRenderBackup();
+  }).catch(function(){toast('No se pudo cifrar y guardar la bóveda.')});
+  return V.queue;
+}
+
+/* ---- vistas ---- */
+function vView(){
+  var ok=vOk();
+  $('vNoCrypto').hidden=ok;
+  $('vCreate').hidden=!(ok&&!V.blob);
+  $('vLock').hidden=!(ok&&V.blob&&!V.unlocked);
+  $('vOpen').hidden=!(ok&&V.unlocked);
+}
+function setTab(name){
+  var b=(name==='boveda');
+  $('tabClaves').hidden=b; $('tabVault').hidden=!b;
+  $('tabBtnClaves').setAttribute('aria-selected',String(!b));
+  $('tabBtnBoveda').setAttribute('aria-selected',String(b));
+  document.body.classList.toggle('vault-on',b);
+  $('hTitle').textContent=b?'Contraseñas':'Claves de entrega';
+  if(b) vView(); else vLock();
+}
+function eyeSvg(on){
+  return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>'+(on?'<path d="M3 3l18 18"/>':'')+'</svg>';
+}
+function setEye(btnId,on){
+  var b=$(btnId); b.innerHTML=eyeSvg(on);
+  b.setAttribute('aria-pressed',String(on)); b.setAttribute('aria-label',on?'Ocultar contraseña':'Mostrar contraseña');
+}
+function bindEyes(){
+  EYES.forEach(function(p){
+    setEye(p[0],false);
+    $(p[0]).addEventListener('click',function(){
+      var on=$(p[0]).getAttribute('aria-pressed')!=='true';
+      p[1].forEach(function(id){$(id).type=on?'text':'password'});
+      setEye(p[0],on);
+    });
+  });
+}
+function eyesReset(){EYES.forEach(function(p){p[1].forEach(function(id){$(id).type='password'});setEye(p[0],false)})}
+function vMsg(id,txt,kind){var m=$(id);m.textContent=txt||'';m.className='manualmsg'+(kind?' '+kind:'')}
+
+function vLock(msg){
+  Object.keys(V.shown).forEach(function(id){clearTimeout(V.shown[id])}); V.shown={};
+  V.key=null; V.data=null; V.unlocked=false; V.editing=null; V.pending=null; V.armedDel=null; V.armedKill=false; V.gen=''; V.q='';
+  ['vPass','vNew1','vNew2','vSitio','vUsuario','vClave','vUrl','vNotas','vQ','vFilePass','vCur','vChg1','vChg2'].forEach(function(id){$(id).value=''});
+  $('vAck').checked=false;
+  $('vList').innerHTML=''; $('gOut').textContent=''; $('dlSitio').innerHTML='';
+  $('vMerge').hidden=true; $('vReplace').hidden=true; $('vBanner').hidden=true; $('vBtnCancel').hidden=true;
+  $('vBtnKill').textContent='Borrar la bóveda de este dispositivo'; $('vBtnKill').classList.remove('armed');
+  ['vCreateMsg','vLockMsg','vMergeMsg','vChgMsg'].forEach(function(id){vMsg(id,'')});
+  $('vNewMeter').textContent='';
+  document.querySelectorAll('#tabVault details').forEach(function(d){d.open=false});
+  eyesReset(); vView();
+  if(msg) toast(msg);
+}
+function vBusy(btnId,on,txt){
+  V.busy=on; var b=$(btnId);
+  if(on){b.dataset.t=b.textContent;b.textContent=txt||'Un momento…';b.disabled=true}
+  else{b.textContent=b.dataset.t||b.textContent;b.disabled=false}
+}
+
+/* ---- fuerza (estimación aproximada) ---- */
+function vBits(p){
+  if(!p) return 0;
+  var pool=0;
+  if(/[a-z]/.test(p)) pool+=26; if(/[A-Z]/.test(p)) pool+=26; if(/\d/.test(p)) pool+=10; if(/[^A-Za-z0-9]/.test(p)) pool+=32;
+  var b=p.length*Math.log2(pool||1);
+  if(/^(.)\1+$/.test(p)||/^\d+$/.test(p)) b=Math.min(b,20);
+  if(/(1234|abcd|qwer|password|contrase|geobiol|admin|letmein)/i.test(p)) b=Math.min(b,35);
+  return Math.round(b);
+}
+function vLevel(b){return b<45?'débil':(b<70?'aceptable':(b<100?'fuerte':'muy fuerte'))}
+
+/* ---- crear / desbloquear ---- */
+async function vCreate(){
+  var a=$('vNew1').value, b=$('vNew2').value;
+  if(a.length<10){vMsg('vCreateMsg','Usa al menos 10 caracteres.','bad');return}
+  if(vBits(a)<45){vMsg('vCreateMsg','Es fácil de adivinar. Prueba una frase de 4 o 5 palabras al azar.','bad');return}
+  if(a!==b){vMsg('vCreateMsg','Las dos contraseñas no coinciden.','bad');return}
+  if(!$('vAck').checked){vMsg('vCreateMsg','Marca la casilla de confirmación.','bad');return}
+  vMsg('vCreateMsg',''); vBusy('vBtnCreate',true,'Creando…');
+  try{
+    var salt=crypto.getRandomValues(new Uint8Array(16));
+    V.key=await vDerive(a,salt,V_ITER); V.salt=salt; V.iter=V_ITER; V.data={entradas:[],borrados:{}};
+    await vSave();
+    if(!V.blob) throw new Error('save');
+    V.unlocked=true; V.fails=0; V.last=Date.now();
+    $('vNew1').value=''; $('vNew2').value=''; $('vAck').checked=false; eyesReset();
+    vOpenUI(); toast('Bóveda creada');
+  }catch(e){V.key=null;V.data=null;vMsg('vCreateMsg','No se pudo crear la bóveda en este navegador.','bad')}
+  vBusy('vBtnCreate',false);
+}
+async function vUnlock(){
+  if(V.busy) return;
+  var wait=Math.ceil((V.until-Date.now())/1000);
+  if(wait>0){vMsg('vLockMsg','Espera '+wait+' s antes de intentar otra vez.','warn');return}
+  var pass=$('vPass').value; if(!pass) return;
+  vMsg('vLockMsg',''); vBusy('vBtnUnlock',true,'Verificando…');
+  try{
+    var r=await vOpenBlob(V.blob,pass);
+    V.key=r.key; V.salt=r.salt; V.iter=r.iter; V.data=r.data; V.unlocked=true; V.fails=0; V.last=Date.now();
+    $('vPass').value=''; eyesReset(); vOpenUI();
+  }catch(e){
+    V.fails++; if(V.fails>=3) V.until=Date.now()+Math.min(60000,1000*Math.pow(2,V.fails-3));
+    vMsg('vLockMsg','Contraseña incorrecta.','bad');
+  }
+  vBusy('vBtnUnlock',false);
+}
+function vOpenUI(){
+  vView(); vRenderList(); vRenderBackup(); gGen();
+}
+
+/* ---- generador (como secrets.choice de Python: aleatorio seguro, sin sesgo) ---- */
+function gPools(){
+  var amb=$('gAmb').checked, pools=[];
+  [['gMay','may'],['gMin','min'],['gNum','num'],['gSim','sim']].forEach(function(p){
+    if($(p[0]).checked){var s=GSETS[p[1]]; if(amb) s=s.replace(/[Il1O0o]/g,''); pools.push(s)}
+  });
+  return pools;
+}
+function gMake(len,pools){
+  var all=pools.join(''), out=[];
+  pools.forEach(function(s){out.push(s.charAt(randInt(s.length)))});
+  while(out.length<len) out.push(all.charAt(randInt(all.length)));
+  for(var i=out.length-1;i>0;i--){var j=randInt(i+1),t=out[i];out[i]=out[j];out[j]=t}
+  return out.join('');
+}
+function gGen(){
+  var pools=gPools(), len=Number($('gLen').value)||16;
+  if(!pools.length){V.gen='';$('gOut').textContent='';$('gMeta').textContent='Marca al menos un tipo de carácter.';return}
+  V.gen=gMake(len,pools);
+  if(V.data){ /* nunca ofrece una contraseña que ya esté guardada */
+    var usadas=new Set(V.data.entradas.map(function(e){return e.clave}));
+    for(var n=0;n<200&&usadas.has(V.gen);n++) V.gen=gMake(len,pools);
+  }
+  $('gOut').textContent=V.gen;
+  var bits=Math.round(len*Math.log2(pools.join('').length));
+  $('gMeta').textContent='≈ '+bits+' bits · '+vLevel(bits);
+}
+
+/* ---- registro ---- */
+function vReadForm(){
+  return {sitio:$('vSitio').value.trim(),usuario:$('vUsuario').value.trim(),clave:$('vClave').value,url:$('vUrl').value.trim(),notas:$('vNotas').value.trim()};
+}
+function vResetForm(){
+  ['vSitio','vUsuario','vClave','vUrl','vNotas'].forEach(function(id){$(id).value=''});
+  V.editing=null; $('vBanner').hidden=true; $('vBtnCancel').hidden=true; $('vBtnSave').textContent='Guardar en la bóveda';
+  $('vClave').type='password'; setEye('vClaveEye',false);
+}
+function vSaveEntry(){
+  if(!V.unlocked) return;
+  var d=vReadForm();
+  if(!d.sitio){toast('Escribe dónde se usa la contraseña (cuenta o servicio).');return}
+  if(!d.clave){toast('La contraseña está vacía. Genera una o escríbela.');return}
+  var now=Date.now();
+  if(V.editing){
+    var e=V.data.entradas.filter(function(x){return x.id===V.editing})[0];
+    if(e) Object.assign(e,d,{mod:now});
+    toast('Cambios guardados');
+  }else{
+    V.data.entradas.push({id:uid(),creado:now,mod:now,sitio:d.sitio,usuario:d.usuario,clave:d.clave,url:d.url,notas:d.notas});
+    toast('Guardada en la bóveda');
+  }
+  vSave(); vResetForm(); vRenderList();
+}
+function vStartEdit(id){
+  var e=V.data.entradas.filter(function(x){return x.id===id})[0]; if(!e) return;
+  V.editing=id;
+  $('vSitio').value=e.sitio; $('vUsuario').value=e.usuario; $('vClave').value=e.clave; $('vUrl').value=e.url; $('vNotas').value=e.notas;
+  $('vBanner').textContent='Editando «'+e.sitio+'». Cambia lo que necesites y guarda.'; $('vBanner').hidden=false;
+  $('vBtnCancel').hidden=false; $('vBtnSave').textContent='Guardar cambios';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function vRenderList(){
+  var host=$('vList');
+  if(!V.unlocked||!V.data){host.innerHTML='';return}
+  var all=V.data.entradas.slice().sort(function(a,b){return a.sitio.localeCompare(b.sitio,'es',{sensitivity:'base'})});
+  var cnt={}; all.forEach(function(e){cnt[e.clave]=(cnt[e.clave]||0)+1});
+  $('dlSitio').innerHTML=all.map(function(e){return '<option value="'+esc(e.sitio)+'">'}).join('');
+  var q=V.q.trim().toLowerCase();
+  var rows=q?all.filter(function(e){return [e.sitio,e.usuario,e.url,e.notas].join(' ').toLowerCase().indexOf(q)>=0}):all;
+  $('vCount').textContent=all.length+(all.length===1?' cuenta':' cuentas');
+  if(!all.length){host.innerHTML='<div class="empty"><b>Aún no hay contraseñas guardadas</b>Genera una a la izquierda, escribe dónde se usa y pulsa Guardar.</div>';return}
+  if(!rows.length){host.innerHTML='<div class="empty"><b>Sin resultados</b>Prueba con otra búsqueda.</div>';return}
+  host.innerHTML=rows.map(function(e){
+    var shown=!!V.shown[e.id], armed=V.armedDel===e.id;
+    var tags=(cnt[e.clave]>1?' <span class="falta">contraseña repetida</span>':'')+(vBits(e.clave)<45?' <span class="falta">débil</span>':'');
+    return '<article class="vitem" data-id="'+esc(e.id)+'">'
+      +'<div style="min-width:0"><b class="vsitio">'+esc(e.sitio)+'</b>'+tags
+        +(e.usuario?'<div class="vline vuser">'+esc(e.usuario)+' <button type="button" class="btn sm" data-act="cuser">Copiar usuario</button></div>':'')
+        +(e.url?'<div class="nota">'+esc(e.url)+'</div>':'')+(e.notas?'<div class="nota">'+esc(e.notas)+'</div>':'')+'</div>'
+      +'<div class="vline"><code class="pwtext">'+(shown?esc(e.clave):'••••••••••••')+'</code>'
+        +'<button type="button" class="eye sm" data-act="eye" aria-pressed="'+shown+'" aria-label="'+(shown?'Ocultar contraseña':'Mostrar contraseña')+'">'+eyeSvg(shown)+'</button>'
+        +'<button type="button" class="btn sm" data-act="cpw">Copiar</button></div>'
+      +'<div class="vact"><button type="button" class="btn sm" data-act="edit">Editar</button>'
+        +'<button type="button" class="btn sm danger'+(armed?' armed':'')+'" data-act="del">'+(armed?'¿Borrar?':'Borrar')+'</button></div>'
+      +'<div class="vdate">Actualizada '+esc(fmtTs(e.mod))+'</div></article>';
+  }).join('');
+}
+function vToggleShow(id){
+  if(V.shown[id]){clearTimeout(V.shown[id]);delete V.shown[id]}
+  else V.shown[id]=setTimeout(function(){delete V.shown[id];vRenderList()},15000);
+  vRenderList();
+}
+
+/* ---- respaldo cifrado ---- */
+function vRenderBackup(){
+  if(!V.unlocked) return;
+  var d=V.meta.cambio>V.meta.respaldo;
+  $('vPillBackup').hidden=!d;
+  $('vBackupState').textContent=V.meta.respaldo?('Último respaldo: '+fmtTs(V.meta.respaldo)+'.'):'Aún no has descargado un respaldo de la bóveda.';
+}
+function vExport(){
+  if(!V.blob){toast('Aún no hay nada que respaldar.');return}
+  var ok=download('boveda-geobiol-respaldo-'+todayISO()+'.json','application/json',JSON.stringify(V.blob,null,2));
+  if(ok){V.meta.respaldo=Date.now();if(V.meta.respaldo<V.meta.cambio)V.meta.respaldo=V.meta.cambio;vLsSet(VM,V.meta);vRenderBackup();toast('Respaldo cifrado descargado')}
+}
+function vPickFile(){$('vFile').click()}
+function vOnFile(ev){
+  var f=ev.target.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){
+    var blob=null; try{blob=JSON.parse(r.result)}catch(e){}
+    ev.target.value='';
+    if(!vValidBlob(blob)){toast('Ese archivo no es un respaldo de la bóveda.');return}
+    if(!V.blob){
+      V.blob=blob; vLsSet(VK,blob); V.meta={cambio:Date.now(),respaldo:Date.now()}; vLsSet(VM,V.meta);
+      vView(); toast('Respaldo cargado. Escribe su contraseña maestra para abrirlo.');
+    }else if(!V.unlocked){
+      V.pending=blob; $('vReplace').hidden=false;
+    }else{
+      V.pending=blob; $('vMerge').hidden=false; vMsg('vMergeMsg',''); $('vFilePass').focus();
+    }
+  };
+  r.onerror=function(){toast('No se pudo leer el archivo.')};
+  r.readAsText(f);
+}
+function vDoReplace(){
+  if(!V.pending) return;
+  V.blob=V.pending; V.pending=null; vLsSet(VK,V.blob); V.meta={cambio:Date.now(),respaldo:Date.now()}; vLsSet(VM,V.meta);
+  V.fails=0; V.until=0; $('vReplace').hidden=true; vMsg('vLockMsg','');
+  toast('Bóveda reemplazada. Usa la contraseña maestra del respaldo.');
+}
+function vMergeData(inc){
+  var tomb=V.data.borrados, cur={}, before={};
+  V.data.entradas.forEach(function(e){cur[e.id]=e;before[e.id]=e.mod});
+  Object.keys(inc.borrados).forEach(function(id){var t=Number(inc.borrados[id])||0;if(t>(tomb[id]||0))tomb[id]=t});
+  inc.entradas.forEach(function(n){var c=cur[n.id];if(!c||n.mod>c.mod)cur[n.id]=n});
+  var out=[]; Object.keys(cur).forEach(function(id){var e=cur[id];if(!(tomb[id]&&tomb[id]>=e.mod))out.push(e)});
+  var res={added:0,updated:0,removed:0}, after={};
+  out.forEach(function(e){after[e.id]=1;if(!(e.id in before))res.added++;else if(e.mod>before[e.id])res.updated++});
+  Object.keys(before).forEach(function(id){if(!after[id])res.removed++});
+  V.data.entradas=out; return res;
+}
+async function vDoMerge(){
+  if(!V.pending||V.busy) return;
+  var pass=$('vFilePass').value; if(!pass) return;
+  vMsg('vMergeMsg',''); vBusy('vBtnMerge',true,'Abriendo…');
+  try{
+    var r=await vOpenBlob(V.pending,pass);
+    var res=vMergeData(r.data);
+    V.pending=null; $('vMerge').hidden=true; $('vFilePass').value='';
+    await vSave(); vRenderList();
+    var p=[]; if(res.added)p.push(res.added+' nuevas'); if(res.updated)p.push(res.updated+' actualizadas'); if(res.removed)p.push(res.removed+' borradas');
+    toast(p.length?('Respaldo unido: '+p.join(', ')+'.'):'El respaldo no traía nada nuevo.');
+  }catch(e){vMsg('vMergeMsg','Contraseña incorrecta o archivo dañado.','bad')}
+  vBusy('vBtnMerge',false);
+}
+async function vChange(){
+  if(V.busy||!V.unlocked) return;
+  var cur=$('vCur').value, a=$('vChg1').value, b=$('vChg2').value;
+  if(!cur){vMsg('vChgMsg','Escribe la contraseña maestra actual.','bad');return}
+  if(a.length<10){vMsg('vChgMsg','La nueva debe tener al menos 10 caracteres.','bad');return}
+  if(vBits(a)<45){vMsg('vChgMsg','La nueva es fácil de adivinar. Prueba una frase de 4 o 5 palabras al azar.','bad');return}
+  if(a!==b){vMsg('vChgMsg','Las dos contraseñas nuevas no coinciden.','bad');return}
+  vMsg('vChgMsg',''); vBusy('vBtnChange',true,'Cambiando…');
+  try{
+    await vOpenBlob(V.blob,cur);
+  }catch(e){vMsg('vChgMsg','La contraseña actual no es correcta.','bad');vBusy('vBtnChange',false);return}
+  try{
+    var salt=crypto.getRandomValues(new Uint8Array(16)), key=await vDerive(a,salt,V_ITER);
+    V.key=key; V.salt=salt; V.iter=V_ITER; await vSave();
+    ['vCur','vChg1','vChg2'].forEach(function(id){$(id).value=''});
+    toast('Contraseña maestra cambiada. Descarga un respaldo nuevo.');
+  }catch(e){vMsg('vChgMsg','No se pudo cambiar la contraseña.','bad')}
+  vBusy('vBtnChange',false);
+}
+function vKill(){
+  var b=$('vBtnKill');
+  if(!V.armedKill){V.armedKill=true;b.textContent='¿Seguro? Se borra todo. Toca otra vez';b.classList.add('armed');
+    setTimeout(function(){if(V.armedKill){V.armedKill=false;b.textContent='Borrar la bóveda de este dispositivo';b.classList.remove('armed')}},5000);return}
+  try{localStorage.removeItem(VK);localStorage.removeItem(VM)}catch(e){}
+  V.blob=null; V.meta={cambio:0,respaldo:0};
+  vLock('Bóveda borrada de este dispositivo.');
+}
+
+/* ---- bloqueo automático ---- */
+function vTouch(){V.last=Date.now()}
+function vTick(){
+  if(!V.unlocked) return;
+  var left=V_IDLE-(Date.now()-V.last);
+  if(left<=0){vLock('Bóveda bloqueada por inactividad.');return}
+  $('vTimer').textContent=left<=30000?('Se bloquea en '+Math.ceil(left/1000)+' s.'):'Se bloquea sola tras 3 minutos sin actividad.';
+}
+
+function vaultInit(){
+  $('tabBtnClaves').addEventListener('click',function(){setTab('claves')});
+  $('tabBtnBoveda').addEventListener('click',function(){setTab('boveda')});
+  bindEyes();
+  if(vOk()){
+    var b=vLsGet(VK); if(vValidBlob(b)) V.blob=b;
+    var m=vLsGet(VM); if(m&&typeof m==='object') V.meta={cambio:Number(m.cambio)||0,respaldo:Number(m.respaldo)||0};
+  }
+  $('vBtnCreate').addEventListener('click',vCreate);
+  $('vNew2').addEventListener('keydown',function(ev){if(ev.key==='Enter')vCreate()});
+  $('vNew1').addEventListener('input',function(){
+    var a=$('vNew1').value, bits=vBits(a);
+    $('vNewMeter').textContent=a?('Fuerza estimada: '+vLevel(bits)+(a.length<10?' · mínimo 10 caracteres':'')):'';
+  });
+  $('vBtnUnlock').addEventListener('click',vUnlock);
+  $('vPass').addEventListener('keydown',function(ev){if(ev.key==='Enter')vUnlock()});
+  $('vBtnLock').addEventListener('click',function(){vLock('Bóveda bloqueada.')});
+  $('vBtnImportNew').addEventListener('click',vPickFile);
+  $('vBtnImportLocked').addEventListener('click',vPickFile);
+  $('vBtnMergeFile').addEventListener('click',vPickFile);
+  $('vFile').addEventListener('change',vOnFile);
+  $('vBtnReplace').addEventListener('click',vDoReplace);
+  $('vBtnReplaceCancel').addEventListener('click',function(){V.pending=null;$('vReplace').hidden=true});
+  $('vBtnMerge').addEventListener('click',vDoMerge);
+  $('vFilePass').addEventListener('keydown',function(ev){if(ev.key==='Enter')vDoMerge()});
+  $('vBtnMergeCancel').addEventListener('click',function(){V.pending=null;$('vMerge').hidden=true;$('vFilePass').value='';vMsg('vMergeMsg','')});
+  $('vBtnExport').addEventListener('click',vExport);
+  $('vBtnChange').addEventListener('click',vChange);
+  $('vBtnKill').addEventListener('click',vKill);
+
+  $('gBtn').addEventListener('click',gGen);
+  ['gMay','gMin','gNum','gSim','gAmb'].forEach(function(id){$(id).addEventListener('change',gGen)});
+  $('gLen').addEventListener('input',function(){$('gLenV').textContent=$('gLen').value;gGen()});
+  $('gCopy').addEventListener('click',function(){V.gen?copyText(V.gen,'Contraseña copiada'):toast('Primero genera una contraseña.')});
+  $('gUse').addEventListener('click',function(){
+    if(!V.gen){toast('Primero genera una contraseña.');return}
+    $('vClave').value=V.gen; toast('Contraseña puesta en el registro. Falta indicar dónde se usa.');
+    if(!$('vSitio').value) $('vSitio').focus();
+  });
+  $('vBtnSave').addEventListener('click',vSaveEntry);
+  $('vBtnCancel').addEventListener('click',function(){vResetForm();toast('Edición cancelada')});
+  $('vQ').addEventListener('input',function(){V.q=$('vQ').value;vRenderList()});
+  $('vList').addEventListener('click',function(ev){
+    var b=ev.target.closest('button[data-act]'); if(!b||!V.unlocked) return;
+    var it=b.closest('.vitem'), id=it&&it.getAttribute('data-id'), act=b.getAttribute('data-act');
+    var e=V.data.entradas.filter(function(x){return x.id===id})[0]; if(!e) return;
+    if(act==='eye') vToggleShow(id);
+    else if(act==='cpw') copyText(e.clave,'Contraseña copiada');
+    else if(act==='cuser') copyText(e.usuario,'Usuario copiado');
+    else if(act==='edit') vStartEdit(id);
+    else if(act==='del'){
+      if(V.armedDel===id){
+        V.data.entradas=V.data.entradas.filter(function(x){return x.id!==id});
+        V.data.borrados[id]=Date.now(); V.armedDel=null;
+        if(V.editing===id) vResetForm();
+        clearTimeout(V.shown[id]); delete V.shown[id];
+        vSave(); vRenderList(); toast('«'+e.sitio+'» borrada');
+      }else{
+        V.armedDel=id; vRenderList();
+        setTimeout(function(){if(V.armedDel===id){V.armedDel=null;vRenderList()}},4000);
+      }
+    }
+  });
+  ['pointerdown','keydown','input'].forEach(function(t){$('tabVault').addEventListener(t,vTouch,true)});
+  setInterval(vTick,1000);
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden){V.hiddenAt=Date.now()}
+    else if(V.unlocked&&V.hiddenAt&&Date.now()-V.hiddenAt>V_AWAY){vLock('Bóveda bloqueada: estuviste fuera un rato.')}
+  });
+  setTab('claves');
+}
+init();
+</script>
+<script>if("serviceWorker" in navigator&&location.protocol.startsWith("http")){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script>
+</body>
+</html>
